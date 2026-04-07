@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Participant {
+  id        String     @id @default(cuid())
+  group     String     // "TREATMENT" or "CONTROL"
+  createdAt DateTime   @default(now())
+  responses Response[]
+}
+
+model Response {
+  id                  Int         @id @default(autoincrement())
+  participantId       String
+  participant         Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  questionKey         String
+  phase               Int
+  selectedOption      Int
+  isSuggestedAnswer   Boolean
+  openedReason        Boolean
+  timeToAnswerSeconds Float
+  isTrapped           Boolean     @default(false)
+  createdAt           DateTime    @default(now())
+
+  @@unique([participantId, questionKey])
+}
