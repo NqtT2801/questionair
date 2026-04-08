@@ -1062,6 +1062,7 @@ export type ParticipantCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many Participants.
    */
   data: Prisma.ParticipantCreateManyInput | Prisma.ParticipantCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1080,6 +1081,7 @@ export type ParticipantCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many Participants.
    */
   data: Prisma.ParticipantCreateManyInput | Prisma.ParticipantCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

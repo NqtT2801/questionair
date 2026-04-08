@@ -19,8 +19,8 @@ const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
   "clientVersion": "7.7.0",
   "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
-  "activeProvider": "sqlite",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Question {\n  id                 Int      @id @default(autoincrement())\n  key                String   @unique\n  phase              Int // 1, 2, or 3\n  group              String // \"TREATMENT\", \"CONTROL\", or \"ALL\"\n  text               String\n  options            String // JSON array of strings e.g. '[\"A\",\"B\",\"C\"]'\n  correctOptionIndex Int\n  reason             String   @default(\"\")\n  isTrapped          Boolean  @default(false)\n  isBet              Boolean  @default(false)\n  sortOrder          Int      @default(0) // ordering within phase+group\n  createdAt          DateTime @default(now())\n  updatedAt          DateTime @updatedAt\n}\n\nmodel Participant {\n  id        String     @id @default(cuid())\n  group     String // \"TREATMENT\" or \"CONTROL\"\n  createdAt DateTime   @default(now())\n  responses Response[]\n}\n\nmodel Response {\n  id                  Int         @id @default(autoincrement())\n  participantId       String\n  participant         Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)\n  questionKey         String\n  phase               Int\n  selectedOption      Int\n  isSuggestedAnswer   Boolean\n  openedReason        Boolean\n  timeToAnswerSeconds Float\n  isTrapped           Boolean     @default(false)\n  createdAt           DateTime    @default(now())\n\n  @@unique([participantId, questionKey])\n}\n",
+  "activeProvider": "postgresql",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Question {\n  id                 Int      @id @default(autoincrement())\n  key                String   @unique\n  phase              Int // 1, 2, or 3\n  group              String // \"TREATMENT\", \"CONTROL\", or \"ALL\"\n  text               String\n  options            String // JSON array of strings e.g. '[\"A\",\"B\",\"C\"]'\n  correctOptionIndex Int\n  reason             String   @default(\"\")\n  isTrapped          Boolean  @default(false)\n  isBet              Boolean  @default(false)\n  sortOrder          Int      @default(0) // ordering within phase+group\n  createdAt          DateTime @default(now())\n  updatedAt          DateTime @updatedAt\n}\n\nmodel Participant {\n  id        String     @id @default(cuid())\n  group     String // \"TREATMENT\" or \"CONTROL\"\n  createdAt DateTime   @default(now())\n  responses Response[]\n}\n\nmodel Response {\n  id                  Int         @id @default(autoincrement())\n  participantId       String\n  participant         Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)\n  questionKey         String\n  phase               Int\n  selectedOption      Int\n  isSuggestedAnswer   Boolean\n  openedReason        Boolean\n  timeToAnswerSeconds Float\n  isTrapped           Boolean     @default(false)\n  createdAt           DateTime    @default(now())\n\n  @@unique([participantId, questionKey])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -45,10 +45,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
   },
 

@@ -572,6 +572,7 @@ export type ResponseCreateOrConnectWithoutParticipantInput = {
 
 export type ResponseCreateManyParticipantInputEnvelope = {
   data: Prisma.ResponseCreateManyParticipantInput | Prisma.ResponseCreateManyParticipantInput[]
+  skipDuplicates?: boolean
 }
 
 export type ResponseUpsertWithWhereUniqueWithoutParticipantInput = {
@@ -1405,6 +1406,7 @@ export type ResponseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Responses.
    */
   data: Prisma.ResponseCreateManyInput | Prisma.ResponseCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1423,6 +1425,7 @@ export type ResponseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Responses.
    */
   data: Prisma.ResponseCreateManyInput | Prisma.ResponseCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
