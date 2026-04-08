@@ -19,7 +19,8 @@
       "Bash(npx next:*)",
       "Bash(timeout 10 bash -c 'while ! curl -s http://localhost:3000 > /dev/null 2>&1; do sleep 1; done; echo \"Server ready\"')",
       "Bash(curl:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(git config:*)"
     ]
   }
 }
