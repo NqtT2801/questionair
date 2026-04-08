@@ -7,6 +7,7 @@ type QuestionCardProps = {
   onSelect: (index: number) => void;
   onNext: () => void;
   questionNumber: number;
+  isTrapped?: boolean;
 };
 
 export default function QuestionCard({
@@ -16,9 +17,15 @@ export default function QuestionCard({
   onSelect,
   onNext,
   questionNumber,
+  isTrapped,
 }: QuestionCardProps) {
   return (
     <div className="flex flex-col h-full">
+      {isTrapped && (
+        <span className="inline-block mb-3 px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full w-fit">
+          Attention Question
+        </span>
+      )}
       <h2 className="text-xl font-semibold text-gray-900 mb-6">
         <span className="text-blue-600">Q{questionNumber}.</span> {text}
       </h2>

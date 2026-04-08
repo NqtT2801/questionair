@@ -188,10 +188,12 @@ export default function SurveyContainer() {
               onSelect={setSelectedOption}
               onNext={recordAndAdvance}
               questionNumber={currentIndex + 1}
+              isTrapped={currentQuestion.isTrapped}
             />
           </div>
           <div className="md:col-span-1">
             <SuggestionPanel
+              key={currentQuestion.key}
               suggestedAnswer={
                 currentQuestion.options[currentQuestion.correctOptionIndex]
               }

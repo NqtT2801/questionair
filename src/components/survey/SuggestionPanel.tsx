@@ -13,13 +13,13 @@ export default function SuggestionPanel({
   reason,
   onReasonOpened,
 }: SuggestionPanelProps) {
-  const [reasonVisible, setReasonVisible] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
-  const handleToggleReason = () => {
-    if (!reasonVisible) {
+  const handleClick = () => {
+    if (!revealed) {
       onReasonOpened();
+      setRevealed(true);
     }
-    setReasonVisible(!reasonVisible);
   };
 
   return (
@@ -31,20 +31,21 @@ export default function SuggestionPanel({
         {suggestedAnswer}
       </p>
 
-      <button
-        onClick={handleToggleReason}
-        className="flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors"
-      >
-        <span className={`transition-transform ${reasonVisible ? "rotate-90" : ""}`}>
-          &#9654;
-        </span>
-        {reasonVisible ? "Hide Reason" : "View Reason"}
-      </button>
-
-      {reasonVisible && (
-        <div className="mt-3 p-3 bg-white rounded border border-amber-200 text-sm text-gray-700">
+      <h4 className="text-sm font-semibold text-amber-800 uppercase tracking-wide mb-2">
+        Reason
+      </h4>
+      {revealed ? (
+        <div className="p-3 bg-white rounded border border-amber-200 text-sm text-gray-700">
           {reason}
         </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handleClick}
+          className="w-full p-3 bg-white rounded border border-dashed border-amber-300 text-sm text-amber-700 cursor-pointer hover:bg-amber-100 hover:border-amber-400 transition-colors text-left"
+        >
+          Click to reveal reason
+        </button>
       )}
     </div>
   );

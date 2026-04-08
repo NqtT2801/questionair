@@ -7,6 +7,22 @@ datasource db {
   provider = "sqlite"
 }
 
+model Question {
+  id                 Int      @id @default(autoincrement())
+  key                String   @unique
+  phase              Int      // 1, 2, or 3
+  group              String   // "TREATMENT", "CONTROL", or "ALL"
+  text               String
+  options            String   // JSON array of strings e.g. '["A","B","C"]'
+  correctOptionIndex Int
+  reason             String   @default("")
+  isTrapped          Boolean  @default(false)
+  isBet              Boolean  @default(false)
+  sortOrder          Int      @default(0) // ordering within phase+group
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
 model Participant {
   id        String     @id @default(cuid())
   group     String     // "TREATMENT" or "CONTROL"

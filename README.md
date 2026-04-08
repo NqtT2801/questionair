@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Survey Application
 
-## Getting Started
+A behavioral survey application with Treatment/Control groups, designed to measure how participants respond to suggested answers across multiple phases.
 
-First, run the development server:
+## Setup
 
 ```bash
+npm install
+npx prisma db push
+npx tsx prisma/seed.ts   # populate default questions
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Survey Flow
 
-## Learn More
+Participants are randomly assigned to either the **Treatment** or **Control** group when they start the survey. The survey has 3 phases:
 
-To learn more about Next.js, take a look at the following resources:
+| Phase | Questions | Details |
+|-------|-----------|---------|
+| Phase 1 | 10 | Multiple-choice (3 options). Different questions and suggested answers for Treatment vs Control. |
+| Phase 2 | 10 + 1 trapped | Multiple-choice (3 options). Same for both groups. One question is flagged as a trapped question and marked with an "Attention Question" badge. |
+| Phase 3 | 1 | Yes/No question: "Do you want to bet?" |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Each normal question displays a **suggested answer** on the right side of the screen along with a **reason** (blurred by default). The participant can click the blurred reason to reveal it.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The system tracks per question:
+- Time taken to answer (seconds)
+- Whether the participant chose the suggested answer
+- Whether the participant unblurred the reason
 
-## Deploy on Vercel
+### Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| URL | Purpose |
+|-----|---------|
+| `/` | Landing page where participants start the survey |
+| `/survey` | The survey itself (all 22 questions in sequence) |
+| `/admin` | Statistics dashboard with participant results |
+| `/admin/questions` | Question management (add, edit, delete questions) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Admin Guide
+
+### Viewing Results (`/admin`)
+
+The statistics table shows one row per participant with these columns:
+
+- **Participant ID** and **Group** (Treatment/Control)
+- **P1 Suggested Rate** -- how often the participant chose the suggested answer in Phase 1
+- **P1 Avg Time** -- average seconds per question in Phase 1
+- **P2 Suggested Rate** -- how often the participant chose the suggested answer in Phase 2 (excluding the trapped question)
+- **P2 Avg Time** -- average seconds per question in Phase 2
+- **P2 Open Reason Rate** -- how often the participant unblurred the reason in Phase 2
+- **P2 Open + Suggested** -- unblurred reason AND chose suggested answer
+- **P2 Open + Not Suggested** -- unblurred reason but did NOT choose suggested answer
+- **P2 No Open + Suggested** -- did NOT unblur reason but chose suggested answer
+- **P2 No Open + Not Suggested** -- did NOT unblur reason and did NOT choose suggested answer
+- **Trapped Wrong** -- whether the participant got the trapped question wrong
+- **Bet** -- whether the participant chose to bet
+
+To delete a participant's record, click the **Delete** button on their row.
+
+### Managing Questions (`/admin/questions`)
+
+Use the filter buttons at the top to view questions by phase and group.
+
+**Adding a question:** Click "+ Add Question", fill in the form, and click Save.
+
+- **Key** -- a unique identifier (e.g., `p1_t_q11`, `p2_q12`)
+- **Phase** -- 1, 2, or 3
+- **Group** -- TREATMENT, CONTROL, or ALL (Phase 2 and 3 questions should be ALL)
+- **Options** -- the answer choices. The correct option is highlighted in green
+- **Correct Option Index** -- which option is the suggested/correct answer
+- **Reason** -- explanation shown to the participant (blurred until clicked)
+- **Sort Order** -- controls the display order within a phase/group
+- **Trapped** -- check this for the trapped question (should only be one in Phase 2)
+- **Bet Question** -- check this for the final yes/no question
+
+**Editing a question:** Click "Edit" on any row, modify the fields, and click Save.
+
+**Deleting a question:** Click "Delete" on any row.
+
+### Question Structure Requirements
+
+For the survey to work correctly, maintain this structure:
+
+- Phase 1 should have questions with group = TREATMENT and group = CONTROL (typically 10 each)
+- Phase 2 should have questions with group = ALL, including exactly one with the Trapped flag
+- Phase 3 should have exactly one question with group = ALL and the Bet flag checked
+
+## Tech Stack
+
+- Next.js (App Router) + TypeScript + Tailwind CSS
+- Prisma ORM + SQLite

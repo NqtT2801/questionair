@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx --version)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.prisma.io)",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(npm --version)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(npx create-next-app@latest temp-setup --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(shopt -s dotglob)",
+      "Bash(cp -r temp-setup/* .)",
+      "Bash(cp -r temp-setup/.* .)",
+      "Bash(rm -rf temp-setup)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx next:*)",
+      "Bash(timeout 10 bash -c 'while ! curl -s http://localhost:3000 > /dev/null 2>&1; do sleep 1; done; echo \"Server ready\"')",
+      "Bash(curl:*)",
+      "Bash(npx tsx:*)"
+    ]
+  }
+}

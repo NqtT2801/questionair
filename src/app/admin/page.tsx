@@ -6,10 +6,15 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 async function getStatistics(): Promise<ParticipantStats[]> {
-  const participants = await prisma.participant.findMany({
+  const allParticipants = await prisma.participant.findMany({
     include: { responses: true },
     orderBy: { createdAt: "desc" },
   });
+
+  // Only include participants who completed the full survey (reached the Phase 3 bet question)
+  const participants = allParticipants.filter((p) =>
+    p.responses.some((r) => r.phase === 3)
+  );
 
   return participants.map((p) => {
     const phase1 = p.responses.filter((r) => r.phase === 1);
@@ -31,6 +36,8 @@ async function getStatistics(): Promise<ParticipantStats[]> {
         phase1.reduce((sum, r) => sum + r.timeToAnswerSeconds, 0) / p1Count,
       phase2SuggestedRate:
         phase2Normal.filter((r) => r.isSuggestedAnswer).length / p2Count,
+      phase2AvgTime:
+        phase2Normal.reduce((sum, r) => sum + r.timeToAnswerSeconds, 0) / p2Count,
       phase2OpenedReasonRate:
         phase2Normal.filter((r) => r.openedReason).length / p2Count,
       phase2OpenedAndSuggested:
@@ -66,12 +73,14 @@ export default async function AdminPage() {
             {stats.length} participants — {treatmentCount} Treatment, {controlCount} Control
           </p>
         </div>
-        <Link
-          href="/"
-          className="text-sm text-blue-600 hover:text-blue-800"
-        >
-          Back to Survey
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/admin/questions" className="text-sm text-blue-600 hover:text-blue-800">
+            Manage Questions
+          </Link>
+          <Link href="/" className="text-sm text-blue-600 hover:text-blue-800">
+            Back to Survey
+          </Link>
+        </div>
       </div>
 
       <StatisticsTable stats={stats} />

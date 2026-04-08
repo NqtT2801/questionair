@@ -34,6 +34,7 @@ export type ParticipantStats = {
   phase1SuggestedRate: number;
   phase1AvgTime: number;
   phase2SuggestedRate: number;
+  phase2AvgTime: number;
   phase2OpenedReasonRate: number;
   phase2OpenedAndSuggested: number;
   phase2OpenedAndNotSuggested: number;

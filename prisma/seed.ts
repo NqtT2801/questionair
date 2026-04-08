@@ -1,0 +1,75 @@
+import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+
+const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
+const prisma = new PrismaClient({ adapter });
+
+const questions = [
+  // Phase 1: Treatment (10)
+  { key: "p1_t_q1", phase: 1, group: "TREATMENT", text: "What is the capital of France?", options: ["Berlin", "Paris", "Madrid"], correctOptionIndex: 1, reason: "Paris has been the capital of France since the 10th century.", isTrapped: false, isBet: false, sortOrder: 1 },
+  { key: "p1_t_q2", phase: 1, group: "TREATMENT", text: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter"], correctOptionIndex: 1, reason: "Mars appears red due to iron oxide (rust) on its surface.", isTrapped: false, isBet: false, sortOrder: 2 },
+  { key: "p1_t_q3", phase: 1, group: "TREATMENT", text: "What is the largest ocean on Earth?", options: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean"], correctOptionIndex: 2, reason: "The Pacific Ocean covers about 63 million square miles.", isTrapped: false, isBet: false, sortOrder: 3 },
+  { key: "p1_t_q4", phase: 1, group: "TREATMENT", text: "Who painted the Mona Lisa?", options: ["Michelangelo", "Leonardo da Vinci", "Raphael"], correctOptionIndex: 1, reason: "Leonardo da Vinci painted the Mona Lisa between 1503 and 1519.", isTrapped: false, isBet: false, sortOrder: 4 },
+  { key: "p1_t_q5", phase: 1, group: "TREATMENT", text: "What is the chemical symbol for gold?", options: ["Ag", "Au", "Fe"], correctOptionIndex: 1, reason: "Au comes from the Latin word 'aurum' meaning gold.", isTrapped: false, isBet: false, sortOrder: 5 },
+  { key: "p1_t_q6", phase: 1, group: "TREATMENT", text: "Which country has the most population?", options: ["United States", "India", "China"], correctOptionIndex: 1, reason: "India surpassed China as the most populous country in 2023.", isTrapped: false, isBet: false, sortOrder: 6 },
+  { key: "p1_t_q7", phase: 1, group: "TREATMENT", text: "What is the speed of light approximately?", options: ["300,000 km/s", "150,000 km/s", "450,000 km/s"], correctOptionIndex: 0, reason: "Light travels at approximately 299,792 km per second in vacuum.", isTrapped: false, isBet: false, sortOrder: 7 },
+  { key: "p1_t_q8", phase: 1, group: "TREATMENT", text: "Which element has the atomic number 1?", options: ["Helium", "Oxygen", "Hydrogen"], correctOptionIndex: 2, reason: "Hydrogen is the lightest and most abundant element in the universe.", isTrapped: false, isBet: false, sortOrder: 8 },
+  { key: "p1_t_q9", phase: 1, group: "TREATMENT", text: "What year did World War II end?", options: ["1943", "1945", "1947"], correctOptionIndex: 1, reason: "World War II ended in 1945 with the surrender of Japan.", isTrapped: false, isBet: false, sortOrder: 9 },
+  { key: "p1_t_q10", phase: 1, group: "TREATMENT", text: "Which is the longest river in the world?", options: ["Amazon", "Nile", "Mississippi"], correctOptionIndex: 1, reason: "The Nile River is approximately 6,650 km long.", isTrapped: false, isBet: false, sortOrder: 10 },
+
+  // Phase 1: Control (10)
+  { key: "p1_c_q1", phase: 1, group: "CONTROL", text: "What is the capital of Japan?", options: ["Osaka", "Tokyo", "Kyoto"], correctOptionIndex: 1, reason: "Tokyo has been the capital of Japan since 1868.", isTrapped: false, isBet: false, sortOrder: 1 },
+  { key: "p1_c_q2", phase: 1, group: "CONTROL", text: "Which planet is closest to the Sun?", options: ["Venus", "Mercury", "Earth"], correctOptionIndex: 1, reason: "Mercury orbits at an average distance of 57.9 million km from the Sun.", isTrapped: false, isBet: false, sortOrder: 2 },
+  { key: "p1_c_q3", phase: 1, group: "CONTROL", text: "What is the smallest continent?", options: ["Europe", "Australia", "Antarctica"], correctOptionIndex: 1, reason: "Australia is the smallest continent at about 7.7 million square km.", isTrapped: false, isBet: false, sortOrder: 3 },
+  { key: "p1_c_q4", phase: 1, group: "CONTROL", text: "Who wrote Romeo and Juliet?", options: ["Charles Dickens", "William Shakespeare", "Jane Austen"], correctOptionIndex: 1, reason: "Shakespeare wrote Romeo and Juliet around 1594-1596.", isTrapped: false, isBet: false, sortOrder: 4 },
+  { key: "p1_c_q5", phase: 1, group: "CONTROL", text: "What is the chemical symbol for silver?", options: ["Ag", "Si", "Sr"], correctOptionIndex: 0, reason: "Ag comes from the Latin word 'argentum' meaning silver.", isTrapped: false, isBet: false, sortOrder: 5 },
+  { key: "p1_c_q6", phase: 1, group: "CONTROL", text: "Which ocean is the smallest?", options: ["Arctic Ocean", "Indian Ocean", "Atlantic Ocean"], correctOptionIndex: 0, reason: "The Arctic Ocean is about 14.06 million square km.", isTrapped: false, isBet: false, sortOrder: 6 },
+  { key: "p1_c_q7", phase: 1, group: "CONTROL", text: "How many bones are in the adult human body?", options: ["186", "206", "226"], correctOptionIndex: 1, reason: "Adults have 206 bones; babies are born with about 270.", isTrapped: false, isBet: false, sortOrder: 7 },
+  { key: "p1_c_q8", phase: 1, group: "CONTROL", text: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide"], correctOptionIndex: 2, reason: "Plants use CO2 in photosynthesis to produce glucose and oxygen.", isTrapped: false, isBet: false, sortOrder: 8 },
+  { key: "p1_c_q9", phase: 1, group: "CONTROL", text: "In which year did the Titanic sink?", options: ["1910", "1912", "1914"], correctOptionIndex: 1, reason: "The Titanic sank on April 15, 1912, during its maiden voyage.", isTrapped: false, isBet: false, sortOrder: 9 },
+  { key: "p1_c_q10", phase: 1, group: "CONTROL", text: "Which is the largest desert in the world?", options: ["Sahara", "Antarctic", "Arabian"], correctOptionIndex: 1, reason: "Antarctica is the largest desert at 14.2 million square km.", isTrapped: false, isBet: false, sortOrder: 10 },
+
+  // Phase 2: Shared (9 normal + 1 trapped)
+  { key: "p2_q1", phase: 2, group: "ALL", text: "What is the boiling point of water at sea level?", options: ["90°C", "100°C", "110°C"], correctOptionIndex: 1, reason: "Water boils at 100°C (212°F) at standard atmospheric pressure.", isTrapped: false, isBet: false, sortOrder: 1 },
+  { key: "p2_q2", phase: 2, group: "ALL", text: "Which language has the most native speakers?", options: ["English", "Mandarin Chinese", "Spanish"], correctOptionIndex: 1, reason: "Mandarin Chinese has over 900 million native speakers.", isTrapped: false, isBet: false, sortOrder: 2 },
+  { key: "p2_q3", phase: 2, group: "ALL", text: "What is the hardest natural substance on Earth?", options: ["Diamond", "Titanium", "Quartz"], correctOptionIndex: 0, reason: "Diamond scores 10 on the Mohs hardness scale, the maximum.", isTrapped: false, isBet: false, sortOrder: 3 },
+  { key: "p2_q4", phase: 2, group: "ALL", text: "Which country invented paper?", options: ["Egypt", "China", "India"], correctOptionIndex: 1, reason: "Paper was invented in China around 105 AD by Cai Lun.", isTrapped: false, isBet: false, sortOrder: 4 },
+  { key: "p2_q5", phase: 2, group: "ALL", text: "What is the main component of the Sun?", options: ["Helium", "Hydrogen", "Oxygen"], correctOptionIndex: 1, reason: "The Sun is about 73% hydrogen and 25% helium by mass.", isTrapped: false, isBet: false, sortOrder: 5 },
+  { key: "p2_q6", phase: 2, group: "ALL", text: "How many chromosomes do humans have?", options: ["44", "46", "48"], correctOptionIndex: 1, reason: "Humans have 23 pairs of chromosomes, totaling 46.", isTrapped: false, isBet: false, sortOrder: 6 },
+  { key: "p2_trapped", phase: 2, group: "ALL", text: "Which of these is a primary color in the RGB model?", options: ["Green", "Yellow", "Orange"], correctOptionIndex: 0, reason: "Green is one of the three primary colors in the RGB color model (Red, Green, Blue).", isTrapped: true, isBet: false, sortOrder: 7 },
+  { key: "p2_q7", phase: 2, group: "ALL", text: "What is the tallest mountain in the world?", options: ["K2", "Mount Everest", "Kangchenjunga"], correctOptionIndex: 1, reason: "Mount Everest stands at 8,849 meters above sea level.", isTrapped: false, isBet: false, sortOrder: 8 },
+  { key: "p2_q8", phase: 2, group: "ALL", text: "Which vitamin is produced when skin is exposed to sunlight?", options: ["Vitamin A", "Vitamin C", "Vitamin D"], correctOptionIndex: 2, reason: "UVB radiation triggers Vitamin D synthesis in the skin.", isTrapped: false, isBet: false, sortOrder: 9 },
+  { key: "p2_q9", phase: 2, group: "ALL", text: "What is the currency of the United Kingdom?", options: ["Euro", "Pound Sterling", "Dollar"], correctOptionIndex: 1, reason: "The Pound Sterling has been the UK's currency for over 1,200 years.", isTrapped: false, isBet: false, sortOrder: 10 },
+
+  // Phase 3: Bet
+  { key: "p3_bet", phase: 3, group: "ALL", text: "Do you want to bet?", options: ["Yes", "No"], correctOptionIndex: -1, reason: "", isTrapped: false, isBet: true, sortOrder: 1 },
+];
+
+async function main() {
+  console.log("Seeding questions...");
+
+  for (const q of questions) {
+    await prisma.question.upsert({
+      where: { key: q.key },
+      update: {
+        ...q,
+        options: JSON.stringify(q.options),
+      },
+      create: {
+        ...q,
+        options: JSON.stringify(q.options),
+      },
+    });
+  }
+
+  console.log(`Seeded ${questions.length} questions.`);
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
