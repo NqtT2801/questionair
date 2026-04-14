@@ -198,6 +198,7 @@ export default function SurveyContainer() {
                 currentQuestion.options[currentQuestion.correctOptionIndex]
               }
               reason={currentQuestion.reason}
+              phase={currentQuestion.phase}
               onReasonOpened={handleReasonOpened}
             />
           </div>

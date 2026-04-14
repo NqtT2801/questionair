@@ -1,19 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type SuggestionPanelProps = {
   suggestedAnswer: string;
   reason: string;
+  phase: number;
   onReasonOpened: () => void;
 };
 
 export default function SuggestionPanel({
   suggestedAnswer,
   reason,
+  phase,
   onReasonOpened,
 }: SuggestionPanelProps) {
-  const [revealed, setRevealed] = useState(false);
+  const [revealed, setRevealed] = useState(phase === 1);
+
+  useEffect(() => {
+    if (phase === 1) {
+      onReasonOpened();
+    }
+  }, [phase, onReasonOpened]);
 
   const handleClick = () => {
     if (!revealed) {
